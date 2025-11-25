@@ -2,7 +2,8 @@ version: "3.8"
 
 services:
   muela:
-    image: ghcr.io/REPLACE_WITH_OWNER/muela:1.0.5
+    # IMAGEN CORREGIDA CON TU USUARIO
+    image: ghcr.io/davidvmuela/muela:1.0.5
     deploy:
       replicas: 1
       labels:

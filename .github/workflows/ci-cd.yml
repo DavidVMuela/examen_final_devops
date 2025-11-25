@@ -93,25 +93,41 @@ jobs:
         username: ${{ secrets.VPS_USER }}
         password: ${{ secrets.VPS_PASSWORD }}
         script: |
-          echo "🔄 Iniciando despliegue automático MUELA"
-
-          cd ~/muela-app
-
-          echo "🔐 Login GHCR..."
-          echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u davidvmuela --password-stdin
-
-          echo "📥 Pull de imagen..."
-          docker pull ghcr.io/davidvmuela/muela:latest
+          echo "🚀 INICIANDO DESPLIEGUE..."
           
-          echo "🧹 Eliminando stack anterior..."
+          # Variables
+          DIR="/home/${{ secrets.VPS_USER }}/muela-app"
+          REPO="https://github.com/DavidVMuela/examen_final_devops.git"
+          
+          # 1. Clonar si no existe
+          if [ ! -d "$DIR" ]; then
+            echo "📂 Clonando repositorio..."
+            git clone $REPO "$DIR"
+          fi
+          
+          cd "$DIR"
+          
+          # 2. Actualizar código (Trae el stack.yml corregido)
+          echo "⬇️ Actualizando desde rama 'muela'..."
+          git fetch --all
+          git reset --hard origin/muela
+          
+          # 3. Login Docker (Usando Token Personal)
+          echo "🔐 Autenticando en GHCR..."
+          # Asegúrate que el secreto se llame CR_PAT o GHCR_PAT
+          echo "${{ secrets.CR_PAT }}" | docker login ghcr.io -u DavidVMuela --password-stdin
+          
+          # 4. Pull imagen nueva
+          echo "📥 Descargando imagen..."
+          docker pull ghcr.io/davidvmuela/muela:1.0.5
+          
+          # 5. Desplegar
+          echo "🚢 Desplegando Stack..."
+          # Limpiamos stack anterior (opcional, pero seguro)
           docker stack rm muela_stack || true
-          sleep 25
+          sleep 10 
           
-          echo "🚢 Desplegando nuevo stack..."
           docker stack deploy --with-registry-auth -c stack.yml muela_stack
           
-          echo "⏳ Esperando servicios..."
-          sleep 20
-          
-          echo "📌 Contenedores activos:"
-          docker ps
+          echo "✅ Despliegue completado."
+          docker service ls
