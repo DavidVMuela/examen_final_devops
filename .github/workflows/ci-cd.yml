@@ -94,18 +94,24 @@ jobs:
         password: ${{ secrets.VPS_PASSWORD }}
         script: |
           echo "🔄 Iniciando despliegue automático MUELA"
+
           cd ~/muela-app
+
           echo "🔐 Login GHCR..."
           echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u davidvmuela --password-stdin
+
           echo "📥 Pull de imagen..."
           docker pull ghcr.io/davidvmuela/muela:latest
+          
           echo "🧹 Eliminando stack anterior..."
           docker stack rm muela_stack || true
           sleep 25
+          
           echo "🚢 Desplegando nuevo stack..."
           docker stack deploy --with-registry-auth -c stack.yml muela_stack
+          
           echo "⏳ Esperando servicios..."
           sleep 20
+          
           echo "📌 Contenedores activos:"
-          docker ps | grep muela
-          echo "✅ Despliegue completado"
+          docker ps
