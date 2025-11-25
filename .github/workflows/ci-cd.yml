@@ -3,14 +3,14 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - villagomez
+      - muela
   pull_request:
     branches:
-      - villagomez
+      - muela
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository_owner }}/villagomez
+  IMAGE_NAME: ${{ github.repository_owner }}/muela
   VERSION: 1.0.5
 
 jobs:
@@ -86,7 +86,7 @@ jobs:
         password: ${{ secrets.VPS_PASSWORD }}
         script: |
           # Navegar al directorio del stack
-          cd /root/stacks/villagomez
+          cd /root/stacks/muela
           
           # Login a GHCR
           echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin

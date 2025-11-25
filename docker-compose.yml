@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   app:
-    image: ghcr.io/DavidVMuela/villagomez:1.0.5
+    image: ghcr.io/DavidVMuela/muela:1.0.5
     ports:
       - "5000:5000"
     environment:
@@ -17,10 +17,10 @@ services:
         max_attempts: 3
       labels:
         - "traefik.enable=true"
-        - "traefik.http.routers.villagomez.rule=Host(`villagomez.byronrm.com`)"
-        - "traefik.http.routers.villagomez.entrypoints=websecure"
-        - "traefik.http.routers.villagomez.tls.certresolver=letsencrypt"
-        - "traefik.http.services.villagomez.loadbalancer.server.port=5000"
+        - "traefik.http.routers.muela.rule=Host(`muela.byronrm.com`)"
+        - "traefik.http.routers.muela.entrypoints=websecure"
+        - "traefik.http.routers.muela.tls.certresolver=letsencrypt"
+        - "traefik.http.services.muela.loadbalancer.server.port=5000"
 
 networks:
   traefik-public:

@@ -159,7 +159,7 @@ HTML_TEMPLATE = """
         </div>
 
         <div class="info">
-            <p><strong>📦 Imagen:</strong> ghcr.io/DavidVMuela/villagomez:1.0.5</p>
+            <p><strong>📦 Imagen:</strong> ghcr.io/DavidVMuela/muela:1.0.5</p>
             <p><strong>🌐 Despliegue:</strong> Automático via GitHub Actions</p>
             <p><strong>🤖 IA:</strong> Claude API Integration</p>
         </div>

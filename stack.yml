@@ -1,28 +1,28 @@
 version: "3.8"
 
 services:
-  villagomez:
-    image: ghcr.io/REPLACE_WITH_OWNER/villagomez:1.0.5
+  muela:
+    image: ghcr.io/REPLACE_WITH_OWNER/muela:1.0.5
     deploy:
       replicas: 1
       labels:
         - "traefik.enable=true"
 
         # --- REDIRECCIÓN HTTP → HTTPS ---
-        - "traefik.http.routers.villagomez.entrypoints=http"
-        - "traefik.http.routers.villagomez.rule=Host(`villagomez.byronrm.com`)"
-        - "traefik.http.middlewares.villagomez-https-redirect.redirectscheme.scheme=https"
-        - "traefik.http.routers.villagomez.middlewares=villagomez-https-redirect"
+        - "traefik.http.routers.muela.entrypoints=http"
+        - "traefik.http.routers.muela.rule=Host(`muela.byronrm.com`)"
+        - "traefik.http.middlewares.muela-https-redirect.redirectscheme.scheme=https"
+        - "traefik.http.routers.muela.middlewares=muela-https-redirect"
 
         # --- ROUTER HTTPS ---
-        - "traefik.http.routers.villagomez-secure.entrypoints=https"
-        - "traefik.http.routers.villagomez-secure.rule=Host(`villagomez.byronrm.com`)"
-        - "traefik.http.routers.villagomez-secure.tls=true"
-        - "traefik.http.routers.villagomez-secure.tls.certresolver=http"
-        - "traefik.http.routers.villagomez-secure.service=villagomez"
+        - "traefik.http.routers.muela-secure.entrypoints=https"
+        - "traefik.http.routers.muela-secure.rule=Host(`muela.byronrm.com`)"
+        - "traefik.http.routers.muela-secure.tls=true"
+        - "traefik.http.routers.muela-secure.tls.certresolver=http"
+        - "traefik.http.routers.muela-secure.service=muela"
 
         # Puerto interno real de tu app Flask → 8080
-        - "traefik.http.services.villagomez.loadbalancer.server.port=8080"
+        - "traefik.http.services.muela.loadbalancer.server.port=8080"
 
         # Red de Traefik
         - "traefik.docker.network=traefik-public"
