@@ -148,7 +148,7 @@ HTML_TEMPLATE = """
 </head>
 <body>
     <div class="container">
-        <h1>🚀 CI/CD Flask + IA</h1>
+        <h1>Examen David Villagómez</h1>
         <div class="subtitle">Proyecto de Integración y Entrega Continua</div>
         <div style="text-align: center;">
             <span class="version">v1.0.5</span>
