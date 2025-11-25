@@ -21,7 +21,7 @@ Aplicación web desarrollada con Flask que integra la API de Claude (Anthropic) 
                                         └─────────────┘
                                                │
                                                ▼
-                                    [apellido].byronrm.com
+                                    [muela].byronrm.com
 ```
 
 ## 🛠️ Tecnologías
@@ -87,10 +87,10 @@ Los tests validan:
 
 ```bash
 # Build
-docker build -t [apellido]:1.0.5 .
+docker build -t [muela]:1.0.5 .
 
 # Run
-docker run -p 5000:5000 -e ANTHROPIC_API_KEY=tu_api_key [apellido]:1.0.5
+docker run -p 5000:5000 -e ANTHROPIC_API_KEY=tu_api_key [muela]:1.0.5
 ```
 
 ## 🌐 Endpoints
@@ -126,9 +126,9 @@ ANTHROPIC_API_KEY=sk-ant-xxxxx  # API key de Claude (opcional)
 git init
 git add .
 git commit -m "Initial commit: Flask AI CI/CD project"
-git branch -M [APELLIDO]
+git branch -M [muela]
 git remote add origin https://github.com/[USUARIO]/[REPO].git
-git push -u origin [APELLIDO]
+git push -u origin [muela]
 ```
 
 ### 2. Configurar Secrets
@@ -141,27 +141,27 @@ Ir a `Settings > Secrets and variables > Actions` y añadir:
 ### 3. Personalizar Archivos
 
 Reemplazar en todos los archivos:
-- `[APELLIDO]` → tu segundo apellido
+- `[muela]` → tu segundo muela
 - `[USUARIO]` → tu usuario de GitHub
-- `/path/to/stack/[APELLIDO]` → ruta del stack en VPS
+- `/path/to/stack/[muela]` → ruta del stack en VPS
 
 ### 4. Preparar VPS
 
 ```bash
 # Crear directorio del stack
-mkdir -p /path/to/stack/[apellido]
-cd /path/to/stack/[apellido]
+mkdir -p /path/to/stack/[muela]
+cd /path/to/stack/[muela]
 
 # Copiar docker-compose.yml personalizado
 # Inicializar el stack
-docker stack deploy -c docker-compose.yml [apellido]
+docker stack deploy -c docker-compose.yml [muela]
 ```
 
 ### 5. Configurar DNS
 
 Crear registro A en DNS apuntando:
 ```
-[apellido].byronrm.com → IP_DEL_VPS
+[muela].byronrm.com → IP_DEL_VPS
 ```
 
 ### 6. Hacer Push para Activar Pipeline
@@ -169,7 +169,7 @@ Crear registro A en DNS apuntando:
 ```bash
 git add .
 git commit -m "feat: configure CI/CD pipeline"
-git push origin [APELLIDO]
+git push origin [muela]
 ```
 
 ## 🎯 Resultado Esperado
@@ -178,7 +178,7 @@ Después del push:
 1. ✅ Tests ejecutados y pasados
 2. ✅ Imagen construida y publicada en GHCR
 3. ✅ Despliegue automático en VPS
-4. ✅ Aplicación accesible en `[apellido].byronrm.com`
+4. ✅ Aplicación accesible en `[muela].byronrm.com`
 
 ## 🔍 Verificación
 
@@ -187,13 +187,13 @@ Después del push:
 https://github.com/[USUARIO]?tab=packages
 
 # Verificar servicio en VPS
-docker service ls | grep [apellido]
+docker service ls | grep [muela]
 
 # Ver logs
-docker service logs [apellido]_app
+docker service logs [muela]_app
 
 # Test del health endpoint
-curl https://[apellido].byronrm.com/health
+curl https://[muela].byronrm.com/health
 ```
 
 ## 📊 Versión
@@ -202,7 +202,7 @@ curl https://[apellido].byronrm.com/health
 
 ## 👤 Autor
 
-[Tu Nombre] - [Segundo Apellido]
+[Tu Nombre] - [Segundo muela]
 
 ## 📄 Licencia
 

@@ -94,8 +94,8 @@ jobs:
           # Pull de la nueva imagen
           docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
           
-          # Actualizar el servicio en el stack (reemplazar APELLIDO)
-          docker service update --image ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }} APELLIDO_app
+          # Actualizar el servicio en el stack (reemplazar muela)
+          docker service update --image ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }} muela_app
           
           # Limpiar imágenes antiguas
           docker image prune -af
