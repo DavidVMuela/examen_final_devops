@@ -64,7 +64,7 @@ jobs:
       uses: appleboy/ssh-action@v1
       with:
         host: ${{ secrets.VPS_HOST }}
-        port: 22   # Forzamos puerto 22 para evitar errores
+        port: 1987
         username: ${{ secrets.VPS_USER }}
         password: ${{ secrets.VPS_PASSWORD }}
         script: |
