@@ -9,10 +9,13 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copiar código de la aplicación
-COPY app.py .
+COPY . .
+
+ENV FLASK_ENV=production
+ENV PORT=8080
 
 # Exponer puerto
-EXPOSE 5000
+EXPOSE 8080
 
 # Comando para ejecutar la aplicación
 CMD ["python", "app.py"]
