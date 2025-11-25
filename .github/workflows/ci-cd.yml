@@ -17,11 +17,14 @@ jobs:
     
     steps:
     # ---------------------------------------------------------
-    # 1. PREPARACIÓN Y TEST (Igual que antes)
+    # DESCARGAR REPOSITORIO
     # ---------------------------------------------------------
     - name: 📥 Checkout repo
       uses: actions/checkout@v4
     
+    # ---------------------------------------------------------
+    # CONFIGURAR PYTHON
+    # ---------------------------------------------------------
     - name: 🐍 Setup Python 3.11
       uses: actions/setup-python@v5
       with:
@@ -32,14 +35,20 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     
+    # ---------------------------------------------------------
+    # FIX PARA QUE pytest ENCUENTRE app.py
+    # ---------------------------------------------------------
     - name: 🛠️ Fix Python path
       run: echo "PYTHONPATH=." >> $GITHUB_ENV
     
+    # ---------------------------------------------------------
+    # EJECUTAR TESTS
+    # ---------------------------------------------------------
     - name: 🧪 Run tests
       run: pytest test_app.py -v
     
     # ---------------------------------------------------------
-    # 2. CONSTRUIR IMAGEN (Igual que antes)
+    # LOGIN GHCR
     # ---------------------------------------------------------
     - name: 🔐 Login to GHCR
       uses: docker/login-action@v3
@@ -48,6 +57,9 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     
+    # ---------------------------------------------------------
+    # BUILD + PUSH DOCKER IMAGE
+    # ---------------------------------------------------------
     - name: 🏗️ Build & Push Docker image
       uses: docker/build-push-action@v6
       with:
@@ -58,50 +70,42 @@ jobs:
           ghcr.io/davidvmuela/muela:latest
     
     # ---------------------------------------------------------
-    # 3. DESPLIEGUE EN VPS (MODIFICADO: Sin SCP)
+    # SUBIR stack.yml AL VPS
     # ---------------------------------------------------------
-    - name: 🚀 Deploy to VPS via SSH (Git Pull Strategy)
+    - name: 📤 Upload stack to VPS
+      uses: appleboy/scp-action@v1
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        port: ${{ secrets.VPS_SSH_PORT }}
+        username: ${{ secrets.VPS_USER }}
+        password: ${{ secrets.VPS_PASSWORD }}
+        source: "stack.yml"
+        target: "/home/${{ secrets.VPS_USER }}/muela-app"
+    
+    # ---------------------------------------------------------
+    # DEPLOY EN DOCKER SWARM
+    # ---------------------------------------------------------
+    - name: 🚀 Deploy to VPS using Docker Swarm
       uses: appleboy/ssh-action@v1
       with:
         host: ${{ secrets.VPS_HOST }}
-        port: 1987
+        port: ${{ secrets.VPS_SSH_PORT }}
         username: ${{ secrets.VPS_USER }}
         password: ${{ secrets.VPS_PASSWORD }}
         script: |
-          echo "🔄 INICIANDO DESPLIEGUE..."
-          
-          # A. Asegurar que existe la carpeta del proyecto
-          if [ ! -d "muela-app" ]; then
-            echo "📂 Clonando repositorio por primera vez..."
-            git clone https://github.com/DavidVMuela/examen_final_devops.git muela-app
-          fi
-          
-          cd muela-app
-          
-          # B. Forzar la descarga de la rama 'muela' para tener el stack.yml actualizado
-          echo "⬇️ Actualizando código (Git Pull)..."
-          git fetch --all
-          git reset --hard origin/muela
-          
-          # C. Login en Docker (Usando el Token Personal guardado en Secrets)
-          echo "🔐 Login en GHCR..."
-          echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u DavidVMuela --password-stdin
-          
-          # D. Descargar la imagen nueva
-          echo "📥 Descargando imagen..."
-          docker pull ghcr.io/davidvmuela/muela:1.0.5
-          
-          # E. Desplegar Stack
-          # Nota: 'docker stack rm' causa tiempo de inactividad. 
-          # Si puedes, usa solo 'docker stack deploy' para actualizar sin borrar.
-          # Pero mantengo tu lógica por seguridad del examen:
-          
-          echo "🧹 Reiniciando Stack..."
+          echo "🔄 Iniciando despliegue automático MUELA"
+          cd ~/muela-app
+          echo "🔐 Login GHCR..."
+          echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u davidvmuela --password-stdin
+          echo "📥 Pull de imagen..."
+          docker pull ghcr.io/davidvmuela/muela:latest
+          echo "🧹 Eliminando stack anterior..."
           docker stack rm muela_stack || true
-          sleep 10 # Esperar a que se liberen los puertos
-          
+          sleep 25
+          echo "🚢 Desplegando nuevo stack..."
           docker stack deploy --with-registry-auth -c stack.yml muela_stack
-          
-          echo "✅ Despliegue enviado. Esperando servicios..."
-          sleep 10
-          docker service ls
+          echo "⏳ Esperando servicios..."
+          sleep 20
+          echo "📌 Contenedores activos:"
+          docker ps | grep muela
+          echo "✅ Despliegue completado"
